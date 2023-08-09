@@ -1,18 +1,10 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Dashboard from "../components/Dashboard";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid/Grid";
-import Papa from "papaparse";
 import { Editor, DateField, SubmitBtn, DeleteBtn } from "../components/Editor";
 import { useSearchParams } from "react-router-dom";
-
-interface RowData {
-  id: string;
-  date: string;
-  title: string;
-  content: string;
-  deleted: string;
-}
 
 const deleteMethod = () => {
   console.log(window.confirm("記事を削除します、よろしいですか？"));
@@ -25,17 +17,18 @@ const Edit: React.FC = () => {
   const [content, setContent] = useState<string>("");
 
   useEffect(() => {
-    Papa.parse<RowData>("/posts.csv", {
-      download: true,
-      header: true,
-      complete: (result) => {
-        const filteredData = result.data.find((item) => item.id === id);
-        if (filteredData) {
-          setTitle(filteredData.title);
-          setContent(filteredData.content.replace(/<br>/g, "\n"));
-        }
-      },
-    });
+    // ここで適切なURLを設定します
+    const url = process.env.REACT_APP_HOST_ADDRESS + "api?id=" + id;
+
+    axios
+      .get(url)
+      .then((res) => {
+        setTitle(res.data[0].title);
+        setContent(res.data[0].content);
+      })
+      .catch((error) => {
+        console.error("データの取得中にエラーが発生しました:", error);
+      });
   }, [id]);
 
   return (

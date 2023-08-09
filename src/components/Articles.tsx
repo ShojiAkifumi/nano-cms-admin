@@ -6,7 +6,7 @@ import TableHead from "@mui/material/TableHead";
 import Button from "@mui/material/Button";
 import TableRow from "@mui/material/TableRow";
 import { Link } from "react-router-dom";
-import Papa from "papaparse";
+import axios from "axios";
 import Title from "./Title";
 import AddIcon from "@mui/icons-material/Add";
 
@@ -21,13 +21,17 @@ const Articles: React.FC = () => {
   const [data, setData] = useState<RowData[]>([]);
 
   useEffect(() => {
-    Papa.parse<RowData>("/posts.csv", {
-      download: true,
-      header: true,
-      complete: (result) => {
-        setData(result.data.reverse());
-      },
-    });
+    // ここで適切なURLを設定します
+    const url = process.env.REACT_APP_HOST_ADDRESS + "api/";
+    console.log(url);
+    axios
+      .get(url)
+      .then((res) => {
+        setData(res.data.reverse());
+      })
+      .catch((error) => {
+        console.error("データの取得中にエラーが発生しました:", error);
+      });
   }, []);
 
   return (

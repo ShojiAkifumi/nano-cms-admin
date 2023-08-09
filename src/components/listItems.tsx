@@ -37,11 +37,13 @@ export const mainListItems = (
 
 export const secondaryListItems = (
   <>
-    <ListItemButton>
-      <ListItemIcon>
-        <HomeIcon />
-      </ListItemIcon>
-      <ListItemText primary="サイトを表示" />
-    </ListItemButton>
+    <Link to={process.env.REACT_APP_HOST_ADDRESS || "/"}>
+      <ListItemButton>
+        <ListItemIcon>
+          <HomeIcon />
+        </ListItemIcon>
+        <ListItemText primary="サイトを表示" />
+      </ListItemButton>
+    </Link>
   </>
 );
